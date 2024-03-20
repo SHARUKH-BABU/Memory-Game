@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Memory Game</h2>
+        <div class="game"></div>
+        <button class="reset" onclick="window.location.reload()">Restart Game</button>
+    </div>
+    
+
+    <script>
+        const emojis = ["😡","😡","🤩","🤩","😂","😂","👻","👻","😺","😺","🥰","🥰", "🥵","🥵","🥳","🥳"];
+        const shuf_emojis = emojis.slice().sort(() => Math.random() - 0.5);
+        let flippedCards = [];
+        let matchedCards = [];
+
+        for (let i = 0; i < shuf_emojis.length; i++) {
+            let box = document.createElement("div");
+            box.className = "item";
+            box.innerHTML = shuf_emojis[i];
+            box.onclick = function() {
+                if (flippedCards.length < 2 && !flippedCards.includes(this)) {
+                    this.classList.add("boxOpen");
+                    flippedCards.push(this);
+
+                    if (flippedCards.length === 2) {
+                        setTimeout(() => {
+                            const [firstCard, secondCard] = flippedCards;
+                            if (firstCard.innerHTML === secondCard.innerHTML) {
+                                firstCard.classList.add("boxMatch");
+                                secondCard.classList.add("boxMatch");
+                                matchedCards.push(firstCard, secondCard);
+                                
+                                if (matchedCards.length === shuf_emojis.length) {
+                                    alert("You won!");
+                                }
+                            } else {
+                                flippedCards.forEach(card => card.classList.remove("boxOpen"));
+                            }
+                            flippedCards = [];
+                        }, 500);
+                    }
+                }
+            }
+            document.querySelector(".game").appendChild(box);
+        }
+    </script>
+</body>
+</html>
